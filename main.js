@@ -2,6 +2,7 @@
 /* global $ */
 /* global google */
 
+//https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJ852WrnFbwokRlgQEBWk5Ry8&key=AIzaSyDsUCcz1-Fwcf_G5IPn858lI4jO8GONcyc
 const AUTH_KEY = 'AIzaSyDsUCcz1-Fwcf_G5IPn858lI4jO8GONcyc';
 const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const ZOOM = 16;
@@ -22,7 +23,7 @@ const STORE = {
 function getUserLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position, error) => {
-      if (error === null) {
+      if (!error) {
         STORE.latitude = position.coords.latitude;
         STORE.longitude = position.coords.longitude;
         initMap();
@@ -61,7 +62,6 @@ function genereateDataList(data) {
   STORE.latitude = data.results[0].geometry.location.lat;
   STORE.longitude = data.results[0].geometry.location.lng;
   initMap();
-  
 }
 
 /*********************   Event Handlers   *********************/
@@ -76,7 +76,6 @@ function handleSearchClick() {
     getSearchLocation(search, genereateDataList);
     $('#map').show();
     $('.js-search-results').show();
-    
   });
 }
 
@@ -93,7 +92,6 @@ function initMap() {
     zoom: ZOOM
   });
 
-
   infowindow = new google.maps.InfoWindow();
 
   const service = new google.maps.places.PlacesService(map);
@@ -109,7 +107,7 @@ function callback(results, status) {
     for (let i = 0; i < results.length; i++) {
       createMarker(results[i]);
     }
-    const list = results.map((item) => renderHTML(item));
+    const list = results.map(item => renderHTML(item));
     $('.js-search-results').html(list);
   }
 }
@@ -120,7 +118,6 @@ function createMarker(place) {
     map: map,
     position: place.geometry.location
   });
-
 
   marker.addListener('click', toggleBounce);
   function toggleBounce() {
@@ -141,8 +138,8 @@ function initialize() {
   let input = document.getElementById('searchTextField');
   let autocomplete = new google.maps.places.Autocomplete(input);
 }
-google.maps.event.addDomListener(window, 'load', initialize);
 
+google.maps.event.addDomListener(window, 'load', initialize);
 
 $(() => {
   handleSearchClick();
